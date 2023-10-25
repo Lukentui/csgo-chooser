@@ -2,4 +2,61 @@
 @use 'sass:color'
 
 @import config
-@import 'blocks/**/*'
+
+.card
+    border-radius: 10px
+
+.color-point
+    display: inline-block
+    width: 16px
+    height: 16px
+    background: red
+    border-radius: 100%
+
+.main-container
+    .col-colors
+        margin-top: 20px
+
+    .col-search
+        margin-top: 40px
+
+        .price-filter-input
+            width: auto
+            margin-left: 10px !important
+
+            input
+                width: 70px
+        
+        .filter-group
+            display: flex
+            
+            .dropdown
+                margin-right: 10px
+
+                &:last-child
+                    margin-right: 0px
+
+    .col-skin
+        margin-top: 20px
+
+        img
+            width: 100%
+            border-bottom: 1px solid #434549
+            padding: 10px
+            display: block
+
+        .color-point-primary
+            width: 40px
+            border-radius: 18px
+            margin-right: auto
+
+        .color-point-secondary
+            margin-left: 5px
+
+        .weapon-type
+            opacity: .6
+            font-size: 16px
+
+        .skin-price
+            text-align: right
+            margin-top: 10px

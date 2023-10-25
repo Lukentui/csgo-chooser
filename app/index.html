@@ -1,12 +1,226 @@
 <!--#set var="title" value="OptimizedHTML 5" -->
 <!--#include virtual="/parts/header.html" -->
 
-	<div style="max-width: 700px; margin: auto">
+<div style="max-width: 700px; margin: auto" id="app">
+  <div class="main-container">
+    <div class="row">
+      <div class="col-12 col-search">
+        <div class="card" data-bs-theme="dark">
+          <div class="card-body">
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" placeholder="Search" />
+              <div class="input-group price-filter-input">
+                <span
+                  class="input-group-text"
+                  style="
+                    border-top-left-radius: 0px;
+                    border-bottom-left-radius: 0px;
+                  "
+                  >цена от</span
+                >
+                <input type="text" class="form-control" placeholder="100" />
+                <span class="input-group-text">до</span>
+                <input type="text" class="form-control" placeholder="2500" />
+              </div>
+            </div>
 
-		<img src="images/dist/preview.jpg" alt="Start HTML5 Template" style="width: 100%"><br><br>
-		<h2 class="heading">Welcome to startup HTML template OptimizedHTML 5!</h2>
-		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam reprehenderit nulla alias expedita a qui, pariatur doloremque ipsa fugit laboriosam odio iure recusandae laborum delectus praesentium magni reiciendis voluptatem. Sed.</p>
+            <div class="filter-group">
+              <div class="dropdown">
+                <button
+                  class="btn btn-secondary dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Предмет
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Ak-47</a></li>
+                  <li><a class="dropdown-item" href="#">USP</a></li>
+                  <li>
+                    <a class="dropdown-item" href="#">MAC-10</a>
+                  </li>
+                </ul>
+              </div>
 
-	</div>
+              <div class="dropdown" style="margin-left: auto">
+                <button
+                  class="btn btn-secondary dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  По цене
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">По популярности</a></li>
+                </ul>
+              </div>
+              <button type="button" class="btn btn-secondary">
+                <i class="fa-solid fa-arrow-down-wide-short"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-colors">
+        <div class="card" data-bs-theme="dark">
+          <div class="card-body">
+            <h5 class="card-title">Сходства и визуал</h5>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="row">
+          <div class="col-4" v-for="(group, index) in skinsList">
+            <div class="col-12 col-skin" v-for="(item, index) in group">
+              <div class="card" data-bs-theme="dark">
+                <img :src="item.image" class="card-img-top" alt="..." />
+                <!-- 
+                  :style="{ background: item.palette.primary }" -->
+                <div class="card-body">
+                  <h5 class="card-title">
+                    <div class="weapon-type">
+                      {{item.name.split(' | ')[0] }}
+                    </div>
+                    {{item.name.split(' | ')[1] }}
+                  </h5>
+
+                  <div class="skin-colors d-flex">
+                    <!-- {{ item.palette.brightness }} -->
+                    <!-- <div
+                      class="color-point color-point-primary"
+                      :style='{ "background": item.avg }'
+                    ></div> -->
+
+                    <!-- <div
+                      class="color-point color-point-primary"
+                      :style='{ "background": item.palette.brightest[1] }'
+                    ></div> -->
+
+                    <div
+                      class="color-point color-point-secondary"
+                      v-for="(item) in item.palette.secondary"
+                      :style='{ "background": item }'
+                    ></div>
+                  </div>
+
+                  <div class="skin-price">от 14.97$</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function avgcolor(colors) {
+    let totalRed = 0;
+    let totalGreen = 0;
+    let totalBlue = 0;
+
+    for (let i = 0; i < colors.length; i++) {
+      let hex = colors[i].replace("#", "");
+      totalRed += parseInt(hex.substring(0, 2), 16);
+      totalGreen += parseInt(hex.substring(2, 4), 16);
+      totalBlue += parseInt(hex.substring(4, 6), 16);
+    }
+
+    let avgRed = Math.round(totalRed / colors.length).toString(16);
+    let avgGreen = Math.round(totalGreen / colors.length).toString(16);
+    let avgBlue = Math.round(totalBlue / colors.length).toString(16);
+
+    if (avgRed.length === 1) {
+      avgRed = "0" + avgRed;
+    }
+    if (avgGreen.length === 1) {
+      avgGreen = "0" + avgGreen;
+    }
+    if (avgBlue.length === 1) {
+      avgBlue = "0" + avgBlue;
+    }
+
+    let avgColor = "#" + avgRed + avgGreen + avgBlue;
+
+    return avgColor;
+  }
+
+  function lightOrDark(color) {
+    // Check the format of the color, HEX or RGB?
+    if (color.match(/^rgb/)) {
+      // If HEX --> store the red, green, blue values in separate variables
+      color = color.match(
+        /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/
+      );
+
+      r = color[1];
+      g = color[2];
+      b = color[3];
+    } else {
+      // If RGB --> Convert it to HEX: http://gist.github.com/983661
+      color = +(
+        "0x" + color.slice(1).replace(color.length < 5 && /./g, "$&$&")
+      );
+
+      r = color >> 16;
+      g = (color >> 8) & 255;
+      b = color & 255;
+    }
+
+    // HSP equation from http://alienryderflex.com/hsp.html
+    hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b));
+
+    // Using the HSP value, determine whether the color is light or dark
+    if (hsp > 140) {
+      return "light";
+    } else {
+      return "dark";
+    }
+  }
+
+  function splitToNChunks(array, n) {
+    let result = [];
+    for (let i = n; i > 0; i--) {
+      result.push(array.splice(0, Math.ceil(array.length / i)));
+    }
+    return result;
+  }
+
+  new Vue({
+    el: "#app",
+    data: {
+      skinsList: [],
+    },
+    mounted() {
+      axios
+        .get(
+          "https://gist.githubusercontent.com/Lukentui/5748026c424c34f6f4837560a8f287a8/raw/853e95ea2295ccd8533a1e7c4df289ff6a12d773/op0fgb.json"
+        )
+        .then((response) => {
+          let cols;
+
+          this.skinsList = splitToNChunks(
+            response.data
+              .sort(() => 0.5 - Math.random())
+              .slice(0, 100)
+              .map((v) => ({
+                ...v,
+                brightness: lightOrDark(v.palette.primary),
+                avg: chroma(v.palette.secondary[0])
+                  .mix(v.palette.secondary[1])
+                  .mix(v.palette.secondary[2])
+                  .hex(),
+              })),
+            3
+          );
+        });
+    },
+  });
+</script>
 
 <!--#include virtual="/parts/footer.html" -->
